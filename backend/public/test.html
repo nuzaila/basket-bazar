@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Test Register</h2>
+<form action="http://localhost:8080/register" method="post">
+  Name: <input type="text" name="name"><br>
+  Phone: <input type="text" name="phone"><br>
+  Email: <input type="text" name="email"><br>
+  Password: <input type="password" name="password"><br>
+  Address: <input type="text" name="delivery_address"><br>
+  <input type="submit" value="Register">
+</form>
+<h2>Test Login</h2>
+<form action="http://localhost:8080/login" method="post">
+  Email: <input type="text" name="email"><br>
+  Password: <input type="password" name="password"><br>
+  <input type="submit" value="Login">
+</form>
+<h2>Test Add Product</h2>
+<form action="http://localhost:8080/add-product" method="post">
+  Category ID: <input type="text" name="category_id"><br>
+  Product Name: <input type="text" name="product_name"><br>
+  Description: <input type="text" name="description"><br>
+  Price: <input type="text" name="price"><br>
+  Image: <input type="text" name="image"><br>
+  Stock Quantity: <input type="text" name="stock_quantity"><br>
+  <input type="submit" value="Add Product">
+</form>
+<h2>Test Add Promotion</h2>
+<form action="http://localhost:8080/add-promotion" method="post">
+  Product ID: <input type="text" name="product_id"><br>
+  Title: <input type="text" name="title"><br>
+  Discount %: <input type="text" name="discount_percentage"><br>
+  Start Date: <input type="date" name="start_date"><br>
+  End Date: <input type="date" name="end_date"><br>
+  <input type="submit" value="Add Promotion">
+</form>
+<h2>Test Add to Cart</h2>
+<form action="http://localhost:8080/add-to-cart" method="post">
+  Customer ID: <input type="text" name="customer_id"><br>
+  Product ID: <input type="text" name="product_id"><br>
+  Quantity: <input type="text" name="quantity"><br>
+  <input type="submit" value="Add to Cart">
+</form>
+<h2>Test Place Order</h2>
+<form action="http://localhost:8080/place-order" method="post">
+  Customer ID: <input type="text" name="customer_id"><br>
+  Delivery Address: <input type="text" name="delivery_address"><br>
+  <input type="submit" value="Place Order">
+</form>
+<h2>Test Submit Inquiry</h2>
+<form action="http://localhost:8080/submit-inquiry" method="post">
+  Name: <input type="text" name="name"><br>
+  Contact Info: <input type="text" name="contact_info"><br>
+  Message: <input type="text" name="message"><br>
+  <input type="submit" value="Submit Inquiry">
+</form>
+</body>
+</html>
