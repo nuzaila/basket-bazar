@@ -21,3 +21,19 @@ $routes->get('orders', 'OrderController::viewOrders');
 
 $routes->post('submit-inquiry', 'InquiryController::submitInquiry');
 $routes->get('inquiries', 'InquiryController::viewInquiries');
+
+$routes->post('update-product/(:num)', 'ProductController::updateProduct/$1');
+$routes->get('delete-product/(:num)', 'ProductController::deleteProduct/$1');
+
+$routes->post('add-category', 'CategoryController::addCategory');
+$routes->get('categories', 'CategoryController::viewCategories');
+$routes->post('update-category/(:num)', 'CategoryController::updateCategory/$1');
+$routes->get('delete-category/(:num)', 'CategoryController::deleteCategory/$1');
+
+$routes->post('update-promotion/(:num)', 'PromotionController::updatePromotion/$1');
+$routes->get('delete-promotion/(:num)', 'PromotionController::deletePromotion/$1');
+
+$routes->post('update-order-status/(:num)', 'OrderController::updateOrderStatus/$1');
+$routes->get('all-orders', 'OrderController::viewAllOrders');
+
+$routes->get('respond-inquiry/(:num)', 'InquiryController::respondInquiry/$1');

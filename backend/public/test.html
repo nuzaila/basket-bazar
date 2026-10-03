@@ -55,5 +55,45 @@
   Message: <input type="text" name="message"><br>
   <input type="submit" value="Submit Inquiry">
 </form>
+<h2>Test Update Product</h2>
+<form action="http://localhost:8080/update-product/1" method="post">
+  Category ID: <input type="text" name="category_id" value="1"><br>
+  Product Name: <input type="text" name="product_name" value="Rice (Updated)"><br>
+  Description: <input type="text" name="description" value="10kg bag now"><br>
+  Price: <input type="text" name="price" value="900"><br>
+  Image: <input type="text" name="image"><br>
+  Stock Quantity: <input type="text" name="stock_quantity" value="15"><br>
+  <input type="submit" value="Update Product">
+</form>
+<h2>Test Add Category</h2>
+<form action="http://localhost:8080/add-category" method="post">
+  Category Name: <input type="text" name="category_name"><br>
+  <input type="submit" value="Add Category">
+</form>
+
+<h2>Test Update Category</h2>
+<form action="http://localhost:8080/update-category/1" method="post">
+  New Category Name: <input type="text" name="category_name"><br>
+  <input type="submit" value="Update Category">
+</form>
+<h2>Test Update Promotion</h2>
+<form action="http://localhost:8080/update-promotion/1" method="post">
+  Product ID: <input type="text" name="product_id" value="1"><br>
+  Title: <input type="text" name="title" value="Rice Mega Discount"><br>
+  Discount %: <input type="text" name="discount_percentage" value="20"><br>
+  Start Date: <input type="date" name="start_date"><br>
+  End Date: <input type="date" name="end_date"><br>
+  <input type="submit" value="Update Promotion">
+</form>
+<h2>Test Update Order Status</h2>
+<form action="http://localhost:8080/update-order-status/1" method="post">
+  New Status: 
+  <select name="status">
+    <option value="Pending">Pending</option>
+    <option value="Out for Delivery">Out for Delivery</option>
+    <option value="Delivered">Delivered</option>
+  </select><br>
+  <input type="submit" value="Update Status">
+</form>
 </body>
 </html>

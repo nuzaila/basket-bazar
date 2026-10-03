@@ -30,4 +30,28 @@ class PromotionController extends BaseController
         $promotions = $model->findAll();
         return json_encode($promotions);
     }
+        // ADMIN edits/updates an existing promotion
+    public function updatePromotion($id)
+    {
+        $model = new PromotionModel();
+
+        $data = [
+            'product_id'           => $this->request->getPost('product_id'),
+            'title'                => $this->request->getPost('title'),
+            'discount_percentage'  => $this->request->getPost('discount_percentage'),
+            'start_date'           => $this->request->getPost('start_date'),
+            'end_date'             => $this->request->getPost('end_date'),
+        ];
+
+        $model->update($id, $data);
+        return 'Promotion updated successfully!';
+    }
+
+    // ADMIN deletes a promotion
+    public function deletePromotion($id)
+    {
+        $model = new PromotionModel();
+        $model->delete($id);
+        return 'Promotion deleted successfully!';
+    }
 }

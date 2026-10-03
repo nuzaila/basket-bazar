@@ -34,4 +34,39 @@ class ProductController extends BaseController
         // Just show it as plain text for now, so we can test it easily
         return json_encode($products);
     }
+
+
+    // ADMIN edits/updates an existing product
+    public function updateProduct($id)
+    {
+        $model = new ProductModel();
+
+        $data = [
+            'category_id'    => $this->request->getPost('category_id'),
+            'product_name'   => $this->request->getPost('product_name'),
+            'description'    => $this->request->getPost('description'),
+            'price'          => $this->request->getPost('price'),
+            'image'          => $this->request->getPost('image'),
+            'stock_quantity' => $this->request->getPost('stock_quantity'),
+        ];
+
+        $model->update($id, $data); // updates the row with this specific ID
+
+        return 'Product updated successfully!';
+    }
+
+    // ADMIN deletes a product
+
+    public function deleteProduct($id)
+    {
+        $model = new ProductModel();
+
+        try {
+            $model->delete($id);
+            return 'Product deleted successfully!';
+        } catch (\Exception $e) {
+            // This happens if the product is already part of an existing order
+            return 'Cannot delete this product - it is linked to an existing order.';
+        }
+    }
 }

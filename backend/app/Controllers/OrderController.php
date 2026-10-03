@@ -76,4 +76,24 @@ class OrderController extends BaseController
         $orders = $orderModel->where('customer_id', $customerId)->findAll();
         return json_encode($orders);
     }
+        // ADMIN updates an order's delivery status
+    public function updateOrderStatus($id)
+    {
+        $orderModel = new OrderModel();
+
+        $data = [
+            'status' => $this->request->getPost('status'),
+        ];
+
+        $orderModel->update($id, $data);
+        return 'Order status updated successfully!';
+    }
+
+    // ADMIN views ALL orders (not just one customer's)
+    public function viewAllOrders()
+    {
+        $orderModel = new OrderModel();
+        $orders = $orderModel->findAll();
+        return json_encode($orders);
+    }
 }

@@ -29,4 +29,16 @@ class InquiryController extends BaseController
         $inquiries = $model->findAll();
         return json_encode($inquiries);
     }
+        // ADMIN responds to / resolves an inquiry
+    public function respondInquiry($id)
+    {
+        $model = new InquiryModel();
+
+        $data = [
+            'status' => 'Resolved',
+        ];
+
+        $model->update($id, $data);
+        return 'Inquiry marked as resolved!';
+    }
 }
