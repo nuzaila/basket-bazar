@@ -55,4 +55,24 @@ class CartController extends BaseController
 
         return json_encode($items);
     }
+        // Customer changes the quantity of an item already in their cart
+    public function updateCartItem($id)
+    {
+        $cartItemModel = new CartItemModel();
+
+        $data = [
+            'quantity' => $this->request->getPost('quantity'),
+        ];
+
+        $cartItemModel->update($id, $data);
+        return 'Cart item updated successfully!';
+    }
+
+    // Customer removes one item from their cart
+    public function removeCartItem($id)
+    {
+        $cartItemModel = new CartItemModel();
+        $cartItemModel->delete($id);
+        return 'Item removed from cart!';
+    }
 }
