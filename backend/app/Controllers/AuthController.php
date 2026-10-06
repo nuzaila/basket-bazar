@@ -42,4 +42,20 @@ class AuthController extends BaseController
             return 'Invalid email or password.';
         }
     }
+        // ADMIN logs in separately from customers
+    public function adminLogin()
+    {
+        $model = new \App\Models\AdminModel();
+
+        $username = $this->request->getPost('username');
+        $password = $this->request->getPost('password');
+
+        $admin = $model->where('username', $username)->first();
+
+        if ($admin && password_verify($password, $admin['password'])) {
+            return 'Admin login successful! Welcome ' . $admin['username'];
+        } else {
+            return 'Invalid admin username or password.';
+        }
+    }
 }

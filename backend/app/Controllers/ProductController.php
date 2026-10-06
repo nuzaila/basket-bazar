@@ -69,4 +69,15 @@ class ProductController extends BaseController
             return 'Cannot delete this product - it is linked to an existing order.';
         }
     }
+        // CUSTOMER searches for a product by name
+    public function searchProduct()
+    {
+        $model = new ProductModel();
+        $keyword = $this->request->getGet('keyword');
+
+        // "like" means "find anything containing this text"
+        $results = $model->like('product_name', $keyword)->findAll();
+
+        return json_encode($results);
+    }
 }

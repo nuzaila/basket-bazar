@@ -37,3 +37,10 @@ $routes->post('update-order-status/(:num)', 'OrderController::updateOrderStatus/
 $routes->get('all-orders', 'OrderController::viewAllOrders');
 
 $routes->get('respond-inquiry/(:num)', 'InquiryController::respondInquiry/$1');
+
+$routes->get('search-products', 'ProductController::searchProduct');
+
+$routes->post('update-cart-item/(:num)', 'CartController::updateCartItem/$1');
+$routes->get('remove-cart-item/(:num)', 'CartController::removeCartItem/$1');
+
+$routes->post('admin-login', 'AuthController::adminLogin');

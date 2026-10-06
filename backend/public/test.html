@@ -95,5 +95,16 @@
   </select><br>
   <input type="submit" value="Update Status">
 </form>
+<h2>Test Update Cart Item</h2>
+<form action="http://localhost:8080/update-cart-item/2" method="post">
+  New Quantity: <input type="text" name="quantity" value="5"><br>
+  <input type="submit" value="Update Cart Item">
+</form>
+<h2>Test Admin Login</h2>
+<form action="http://localhost:8080/admin-login" method="post">
+  Username: <input type="text" name="username"><br>
+  Password: <input type="password" name="password"><br>
+  <input type="submit" value="Admin Login">
+</form>
 </body>
 </html>
