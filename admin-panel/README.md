@@ -36,6 +36,3 @@ npm run dev
 ```sh
 npm run build
 ```
-## Figma Design
-
-Admin Panel Figma Wireframes:(https://www.figma.com/design/fGcF7L0bzMmYMA7QoLRz5Z/Basket-Bazar?node-id=0-1&t=5NEv6hfNa86rVH64-1)
