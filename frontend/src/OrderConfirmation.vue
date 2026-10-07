@@ -1,9 +1,10 @@
 <script setup>
-defineProps(['orderMessage'])
+import { useRoute } from 'vue-router'
+const route = useRoute()
 </script>
 
 <template>
   <h2>Thank You!</h2>
   <p>Your order has been placed successfully.</p>
-  <p>{{ orderMessage }}</p>
+  <p>{{ route.query.message }}</p>
 </template>
