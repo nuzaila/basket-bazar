@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard - Basket Bazar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div id="header"></div>
+
+  <div class="content">
+    <div class="heading"><h1>☰ Dashboard</h1></div>
+
+    <div class="cards">
+      <div class="card">Product
+        <!-- IMAGE: images/product-icon.png -->
+        <img src="images/product-icon.png" alt="">
+        <span class="num">[<span id="cProducts">0</span>]</span>
+      </div>
+      <div class="card">Offers
+        <!-- IMAGE: images/offers-icon.png -->
+        <img src="images/offers-icon.png" alt="">
+        <span class="num">[<span id="cOffers">0</span>]</span>
+      </div>
+      <div class="card">Orders
+        <!-- IMAGE: images/orders-icon.png -->
+        <img src="images/orders-icon.png" alt="">
+        <span class="num">[<span id="cOrders">0</span>]</span>
+      </div>
+      <div class="card">Customers
+        <!-- IMAGE: images/customers-icon.png -->
+        <img src="images/customers-icon.png" alt="">
+        <span class="num">[<span id="cCustomers">0</span>]</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Order Id</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+        </thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  renderHeader('home');
+
+  async function loadDashboard() {
+    try {
+      const [prodRes, promoRes, orderRes] = await Promise.all([
+        fetch(BASE_URL + '/products'),
+        fetch(BASE_URL + '/promotions'),
+        fetch(BASE_URL + '/all-orders')
+      ]);
+      const products = await prodRes.json();
+      const promos = await promoRes.json();
+      const orders = await orderRes.json();
+
+      document.getElementById('cProducts').textContent = products.length;
+      document.getElementById('cOffers').textContent = promos.length;
+      document.getElementById('cOrders').textContent = orders.length;
+
+      // No "customers" address exists in the backend, so we count unique customers found in orders
+      const ids = new Set(orders.map(o => o.customer_id ?? o.customer_name ?? o.customer));
+      document.getElementById('cCustomers').textContent = ids.size;
+
+      document.getElementById('ordersBody').innerHTML = orders.map(o => `
+        <tr>
+          <td>#${o.order_id ?? o.id ?? ''}</td>
+          <td>${o.customer_name ?? o.name ?? o.customer_id ?? ''}</td>
+          <td>Rs. ${o.total_amount ?? o.total ?? ''}</td>
+          <td>${o.status ?? o.order_status ?? ''}</td>
+        </tr>`).join('');
+    } catch (e) {
+      document.getElementById('ordersBody').innerHTML =
+        '<tr><td colspan="4">Could not load data. Is the backend running?</td></tr>';
+    }
+  }
+  loadDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Products - Basket Bazar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div id="header"></div>
+
+  <div class="content">
+    <div class="heading">
+      <h1>☰ Manage Products</h1>
+      <button class="btn btn-green" id="addBtn">+ Add New Product</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Image</th><th>Product Name</th><th>Stock</th><th>Action</th></tr>
+        </thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit popup -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 id="modalTitle">Add New Product</h3>
+    <form id="productForm">
+      <label>Category ID</label>
+      <input name="category_id" id="f_category" required>
+      <label>Product Name</label>
+      <input name="product_name" id="f_name" required>
+      <label>Description</label>
+      <textarea name="description" id="f_desc" rows="2"></textarea>
+      <label>Price</label>
+      <input name="price" id="f_price" type="number" step="0.01" required>
+      <label>Stock Quantity</label>
+      <input name="stock_quantity" id="f_stock" type="number" required>
+      <label>Image</label>
+      <input name="image" type="file" accept="image/*">
+      <div class="actions">
+        <button type="button" class="btn btn-red" id="deleteBtn" style="display:none">Delete</button>
+        <button type="button" class="btn btn-grey" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-green">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  renderHeader('products');
+
+  let products = [];
+  let editingId = null;
+
+  async function loadProducts() {
+    const params = new URLSearchParams(location.search);
+    const keyword = params.get('search');
+    const url = keyword
+      ? `${BASE_URL}/search-products?keyword=${encodeURIComponent(keyword)}`
+      : `${BASE_URL}/products`;
+    try {
+      const res = await fetch(url);
+      products = await res.json();
+      render();
+    } catch (e) {
+      document.getElementById('body').innerHTML =
+        '<tr><td colspan="4">Could not load products. Is the backend running?</td></tr>';
+    }
+  }
+
+  function render() {
+    document.getElementById('body').innerHTML = products.map(p => `
+      <tr>
+        <td><img class="thumb" src="${productImage(p.image)}"
+             onerror="this.src='images/placeholder.png'" alt=""></td>
+        <td>${p.product_name}<br>Rs. ${p.price}</td>
+        <td>${p.stock_quantity}</td>
+        <td><a class="edit-link" onclick="openEdit(${p.product_id ?? p.id})">Edit</a></td>
+      </tr>`).join('');
+  }
+
+  const bg = document.getElementById('modalBg');
+  const form = document.getElementById('productForm');
+
+  document.getElementById('addBtn').onclick = () => {
+    editingId = null;
+    form.reset();
+    document.getElementById('modalTitle').textContent = 'Add New Product';
+    document.getElementById('deleteBtn').style.display = 'none';
+    bg.classList.add('open');
+  };
+
+  function openEdit(id) {
+    const p = products.find(x => (x.product_id ?? x.id) == id);
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'Edit Product';
+    document.getElementById('f_category').value = p.category_id ?? '';
+    document.getElementById('f_name').value = p.product_name ?? '';
+    document.getElementById('f_desc').value = p.description ?? '';
+    document.getElementById('f_price').value = p.price ?? '';
+    document.getElementById('f_stock').value = p.stock_quantity ?? '';
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+    bg.classList.add('open');
+  }
+
+  document.getElementById('cancelBtn').onclick = () => bg.classList.remove('open');
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const url = editingId
+      ? `${BASE_URL}/update-product/${editingId}`
+      : `${BASE_URL}/add-product`;
+    const res = await fetch(url, { method: 'POST', body: formData });
+    alert(await res.text());
+    bg.classList.remove('open');
+    loadProducts();
+  };
+
+  document.getElementById('deleteBtn').onclick = async () => {
+    if (!confirm('Delete this product?')) return;
+    const res = await fetch(`${BASE_URL}/delete-product/${editingId}`);
+    alert(await res.text());   // shows the friendly message if linked to an order
+    bg.classList.remove('open');
+    loadProducts();
+  };
+
+  loadProducts();
+</script>
+</body>
+</html>

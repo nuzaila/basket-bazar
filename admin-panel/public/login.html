@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login - Basket Bazar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <button class="back" onclick="history.back()">‹</button>
+    <!-- IMAGE: images/logo.png -->
+    <img src="images/logo.png" alt="logo">
+    <span class="title">Basket Bazar</span>
+  </div>
+
+  <div class="login-wrap">
+    <div class="lock-circle">
+      <!-- IMAGE: images/lock-icon.png -->
+      <img src="images/lock-icon.png" alt="lock">
+    </div>
+    <h2>Admin Login</h2>
+    <p class="sub">Sign in to manage Basket Bazar</p>
+
+    <label>User name</label>
+    <input class="field" id="username" type="text" placeholder="Enter Username">
+
+    <label>Password</label>
+    <div class="pass-row">
+      <input class="field" id="password" type="password" placeholder="Enter Password">
+      <button class="eye" id="eye" type="button">👁</button>
+    </div>
+
+    <button class="login-btn" id="loginBtn">Login</button>
+    <a href="#" class="forgot">Forgot Password ?</a>
+    <p class="error" id="msg"></p>
+  </div>
+</div>
+
+<script>
+  const BASE_URL = 'http://localhost:8080';
+
+  document.getElementById('eye').onclick = () => {
+    const p = document.getElementById('password');
+    p.type = p.type === 'password' ? 'text' : 'password';
+  };
+
+  document.getElementById('loginBtn').onclick = async () => {
+    const msg = document.getElementById('msg');
+    msg.textContent = '';
+    const formData = new FormData();
+    formData.append('username', document.getElementById('username').value);
+    formData.append('password', document.getElementById('password').value);
+
+    try {
+      const response = await fetch(BASE_URL + '/admin-login', { method: 'POST', body: formData });
+      const message = await response.text();
+      // Backend returns a text message. If it says success, go to dashboard.
+      if (response.ok && !/invalid|incorrect|wrong|fail|error/i.test(message)) {
+        location.href = 'dashboard.html';
+      } else {
+        msg.textContent = message;
+      }
+    } catch (e) {
+      msg.textContent = 'Cannot reach the server. Is "php spark serve" running?';
+    }
+  };
+</script>
+</body>
+</html>

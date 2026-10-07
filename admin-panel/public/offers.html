@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Offers - Basket Bazar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div id="header"></div>
+
+  <div class="content">
+    <div class="heading">
+      <h1>☰ Manage Offers</h1>
+      <button class="btn btn-red" id="addBtn">+ Add Offers</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Offer Name</th><th>Discount</th><th>Valid From</th><th>Action</th></tr>
+        </thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit popup -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 id="modalTitle">Add Offer</h3>
+    <form id="offerForm">
+      <label>Product</label>
+      <select name="product_id" id="f_product" required></select>
+      <label>Offer Title</label>
+      <input name="title" id="f_title" required>
+      <label>Discount Percentage</label>
+      <input name="discount_percentage" id="f_discount" type="number" step="0.01" required>
+      <label>Start Date</label>
+      <input name="start_date" id="f_start" type="date" required>
+      <label>End Date</label>
+      <input name="end_date" id="f_end" type="date" required>
+      <div class="actions">
+        <button type="button" class="btn btn-red" id="deleteBtn" style="display:none">Delete</button>
+        <button type="button" class="btn btn-grey" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-green">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  renderHeader('offers');
+
+  let promos = [];
+  let editingId = null;
+
+  async function loadProductOptions() {
+    const res = await fetch(BASE_URL + '/products');
+    const products = await res.json();
+    document.getElementById('f_product').innerHTML = products
+      .map(p => `<option value="${p.product_id ?? p.id}">${p.product_name}</option>`).join('');
+  }
+
+  async function loadPromos() {
+    try {
+      const res = await fetch(BASE_URL + '/promotions');
+      promos = await res.json();
+      document.getElementById('body').innerHTML = promos.map(p => `
+        <tr>
+          <td>${p.title}</td>
+          <td>${p.discount_percentage}%</td>
+          <td>${formatDate(p.start_date)}</td>
+          <td><a class="edit-link" onclick="openEdit(${p.promotion_id ?? p.id})">Edit</a></td>
+        </tr>`).join('');
+    } catch (e) {
+      document.getElementById('body').innerHTML =
+        '<tr><td colspan="4">Could not load offers. Is the backend running?</td></tr>';
+    }
+  }
+
+  const bg = document.getElementById('modalBg');
+  const form = document.getElementById('offerForm');
+
+  document.getElementById('addBtn').onclick = () => {
+    editingId = null;
+    form.reset();
+    document.getElementById('modalTitle').textContent = 'Add Offer';
+    document.getElementById('deleteBtn').style.display = 'none';
+    bg.classList.add('open');
+  };
+
+  function openEdit(id) {
+    const p = promos.find(x => (x.promotion_id ?? x.id) == id);
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'Edit Offer';
+    document.getElementById('f_product').value = p.product_id;
+    document.getElementById('f_title').value = p.title;
+    document.getElementById('f_discount').value = p.discount_percentage;
+    document.getElementById('f_start').value = (p.start_date || '').substring(0, 10);
+    document.getElementById('f_end').value = (p.end_date || '').substring(0, 10);
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+    bg.classList.add('open');
+  }
+
+  document.getElementById('cancelBtn').onclick = () => bg.classList.remove('open');
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const url = editingId
+      ? `${BASE_URL}/update-promotion/${editingId}`
+      : `${BASE_URL}/add-promotion`;
+    const res = await fetch(url, { method: 'POST', body: formData });
+    alert(await res.text());
+    bg.classList.remove('open');
+    loadPromos();
+  };
+
+  document.getElementById('deleteBtn').onclick = async () => {
+    if (!confirm('Delete this offer?')) return;
+    const res = await fetch(`${BASE_URL}/delete-promotion/${editingId}`);
+    alert(await res.text());
+    bg.classList.remove('open');
+    loadPromos();
+  };
+
+  loadProductOptions();
+  loadPromos();
+</script>
+</body>
+</html>
