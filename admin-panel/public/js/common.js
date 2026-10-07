@@ -1,9 +1,9 @@
 // ====== Backend address (unchanged backend) ======
-const BASE_URL = 'http://localhost:8080';
+      const BASE_URL = '/api';
 
 // If product pictures don't show, open /products in your browser, look at the "image" value,
 // and change this to match where your backend serves its uploaded pictures.
-const IMAGE_BASE = 'http://localhost:8080/uploads/';
+      const IMAGE_BASE = '/api/uploads/';;
 
 function productImage(name) {
   if (!name) return 'images/placeholder.png';

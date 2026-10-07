@@ -9,7 +9,7 @@
 <body>
 <div class="page">
   <div class="topbar">
-    <button class="back" onclick="history.back()">‹</button>
+    <button class="back" type="button" onclick="history.back()">‹</button>
     <!-- IMAGE: images/logo.png -->
     <img src="images/logo.png" alt="logo">
     <span class="title">Basket Bazar</span>
@@ -29,43 +29,42 @@
     <label>Password</label>
     <div class="pass-row">
       <input class="field" id="password" type="password" placeholder="Enter Password">
-      <button class="eye" id="eye" type="button">👁</button>
+      <button class="eye" id="eye" type="button" onclick="togglePassword()">👁</button>
     </div>
 
-    <button class="login-btn" id="loginBtn">Login</button>
+    <button class="login-btn" id="loginBtn" type="button" onclick="doLogin()">Login</button>
     <a href="#" class="forgot">Forgot Password ?</a>
     <p class="error" id="msg"></p>
   </div>
 </div>
 
 <script>
-  const BASE_URL = 'http://localhost:8080';
+  var API = '/api';
 
-  document.getElementById('eye').onclick = () => {
-    const p = document.getElementById('password');
+  function togglePassword() {
+    var p = document.getElementById('password');
     p.type = p.type === 'password' ? 'text' : 'password';
-  };
+  }
 
-  document.getElementById('loginBtn').onclick = async () => {
-    const msg = document.getElementById('msg');
+  async function doLogin() {
+    var msg = document.getElementById('msg');
     msg.textContent = '';
-    const formData = new FormData();
+    var formData = new FormData();
     formData.append('username', document.getElementById('username').value);
     formData.append('password', document.getElementById('password').value);
 
     try {
-      const response = await fetch(BASE_URL + '/admin-login', { method: 'POST', body: formData });
-      const message = await response.text();
-      // Backend returns a text message. If it says success, go to dashboard.
+      var response = await fetch(API + '/admin-login', { method: 'POST', body: formData });
+      var message = await response.text();
       if (response.ok && !/invalid|incorrect|wrong|fail|error/i.test(message)) {
         location.href = 'dashboard.html';
       } else {
         msg.textContent = message;
       }
     } catch (e) {
-      msg.textContent = 'Cannot reach the server. Is "php spark serve" running?';
+      msg.textContent = 'Cannot reach the server.';
     }
-  };
+  }
 </script>
 </body>
 </html>
