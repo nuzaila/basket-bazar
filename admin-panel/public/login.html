@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login - Basket Bazar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <button class="back" type="button" onclick="history.back()">‹</button>
+    <!-- IMAGE: images/logo.png -->
+    <img src="images/logo.png" alt="logo">
+    <span class="title">Basket Bazar</span>
+  </div>
+
+  <div class="login-wrap">
+    <div class="lock-circle">
+      <!-- IMAGE: images/lock-icon.png -->
+      <img src="images/lock-icon.png" alt="lock">
+    </div>
+    <h2>Admin Login</h2>
+    <p class="sub">Sign in to manage Basket Bazar</p>
+
+    <label>User name</label>
+    <input class="field" id="username" type="text" placeholder="Enter Username">
+
+    <label>Password</label>
+    <div class="pass-row">
+      <input class="field" id="password" type="password" placeholder="Enter Password">
+      <button class="eye" id="eye" type="button" onclick="togglePassword()">👁</button>
+    </div>
+
+    <button class="login-btn" id="loginBtn" type="button" onclick="doLogin()">Login</button>
+    <a href="#" class="forgot">Forgot Password ?</a>
+    <p class="error" id="msg"></p>
+  </div>
+</div>
+
+<script>
+  var API = '/api';
+
+  function togglePassword() {
+    var p = document.getElementById('password');
+    p.type = p.type === 'password' ? 'text' : 'password';
+  }
+
+  async function doLogin() {
+    var msg = document.getElementById('msg');
+    msg.textContent = '';
+    var formData = new FormData();
+    formData.append('username', document.getElementById('username').value);
+    formData.append('password', document.getElementById('password').value);
+
+    try {
+      var response = await fetch(API + '/admin-login', { method: 'POST', body: formData });
+      var message = await response.text();
+      if (response.ok && !/invalid|incorrect|wrong|fail|error/i.test(message)) {
+        location.href = 'dashboard.html';
+      } else {
+        msg.textContent = message;
+      }
+    } catch (e) {
+      msg.textContent = 'Cannot reach the server.';
+    }
+  }
+</script>
+</body>
+</html>
